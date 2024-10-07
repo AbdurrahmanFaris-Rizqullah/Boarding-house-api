@@ -1,0 +1,9 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "Faris123",
+    "database": "db_boarding_house",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  }
+}
