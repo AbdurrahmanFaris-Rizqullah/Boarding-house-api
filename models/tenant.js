@@ -11,7 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Tenant.associate = function(models) {
-        
+        Tenant.hasMany(models.Payment);
+        Tenant.belongsTo(models.Room);   
       }
     }
   }

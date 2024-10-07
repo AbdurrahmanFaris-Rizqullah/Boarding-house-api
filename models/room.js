@@ -10,7 +10,9 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      Room.hasMany(models.Tenant);
+      Room.hasMany(models.Payment);
+
     }
   }
   Room.init({
