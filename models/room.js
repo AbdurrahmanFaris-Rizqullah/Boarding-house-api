@@ -10,9 +10,17 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Room.hasMany(models.Tenant);
-      Room.hasMany(models.Payment);
-
+      Room.hasMany(models.Tenant, {
+        foreignKey: 'roomId', // Foreign key di Tenant
+        onDelete: 'CASCADE',  // Hapus tenant jika room dihapus
+        onUpdate: 'CASCADE'   // Update foreign key jika room di-update
+      });
+      
+      Room.hasMany(models.Payment, {
+        foreignKey: 'roomId', // Foreign key di Payment
+        onDelete: 'CASCADE',  // Hapus payment jika room dihapus
+        onUpdate: 'CASCADE'   // Update foreign key jika room di-update
+      });
     }
   }
   Room.init({
