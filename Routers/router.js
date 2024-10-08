@@ -1,6 +1,6 @@
 const express = require("express");
 const TenantsController = require("../controllers/TenantsController");
-const RoomsController = require("../Controllers/RoomsController");
+const RoomsController = require("../Controllers/roomsController");
 const PaymentsController = require("../controllers/PaymentsController");
 const adminAuth = require("../middlewares/adminAuthorization");
 const authentication = require("../middlewares/authenticate");

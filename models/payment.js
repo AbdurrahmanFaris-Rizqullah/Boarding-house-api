@@ -1,58 +1,36 @@
 'use strict';
+const { Model } = require("sequelize");
 
-module.exports = {
-  up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Payments', {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER
-      },
-      amount: {
-        type: Sequelize.FLOAT,
-        allowNull: false
-      },
-      status: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      due_date: {
-        type: Sequelize.DATE,
-        allowNull: false
-      },
+module.exports = (sequelize, DataTypes) => {
+  class Payment extends Model {
+    static associate(models) {
+      Payment.belongsTo(models.Tenant, { foreignKey: "tenantId" });
+      Payment.belongsTo(models.Room, { foreignKey: "roomId" });
+    }
+  }
+  Payment.init(
+    {
+      status: DataTypes.STRING,
+      due_date: DataTypes.DATE,
       tenantId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
+        type: DataTypes.INTEGER,
         references: {
-          model: 'Tenants',  // Harus sesuai dengan nama tabel 'Tenants'
-          key: 'id'
+          model: "Tenants",
+          key: "id",
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL'
       },
       roomId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
+        type: DataTypes.INTEGER,
         references: {
-          model: 'Rooms',  // Harus sesuai dengan nama tabel 'Rooms'
-          key: 'id'
+          model: "Rooms",
+          key: "id",
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL'
       },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      }
-    });
-  },
-
-  down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Payments');
-  }
+    },
+    {
+      sequelize,
+      modelName: "Payment",
+    }
+  );
+  return Payment;
 };
