@@ -1,37 +1,67 @@
-const { Tenant } = require("../models");
+const { Tenant } = require('../models');
 
-class TenantsController {
-  static async addTenant(req, res) {
-    try {
-      const { name, age, gender, roomId } = req.body;
-      const newTenant = await Tenant.create({ name, age, gender, roomId });
-      res.status(201).json(newTenant);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to add tenant", error });
-    }
-  }
-
-  static async getAllTenants(req, res) {
+class TenantController {
+  static async getAll(req, res) {
     try {
       const tenants = await Tenant.findAll();
       res.status(200).json(tenants);
     } catch (error) {
-      res.status(500).json({ message: "Failed to get tenants", error });
+      res.status(500).json({ message: "Error fetching tenants" });
+    }
+  }
+  
+
+
+// Menambahkan Tenant
+  static async create(req, res) {
+    try {
+      const { name, email, phone } = req.body;
+      const tenant = await Tenant.create({ name, email, phone });
+      res.status(201).json(tenant);
+    } catch (error) {
+      res.status(500).json({ message: "Error creating tenant" });
     }
   }
 
-  static async getTenantById(req, res) {
-    try {
-      const tenant = await Tenant.findByPk(req.params.id);
-      if (tenant) {
-        res.status(200).json(tenant);
-      } else {
-        res.status(404).json({ message: "Tenant not found" });
-      }
-    } catch (error) {
-      res.status(500).json({ message: "Failed to get tenant", error });
+// Update tenant berdasarkan id
+static async update(req, res) {
+  try {
+    const { id } = req.params;
+    const { name, email, phone } = req.body;
+    const tenant = await Tenant.findByPk(id);
+
+    if (!tenant) {
+      return res.status(404).json({ message: "Tenant not found" });
     }
+
+    tenant.name = name || tenant.name;
+    tenant.email = email || tenant.email;
+    tenant.phone = phone || tenant.phone;
+
+    await tenant.save();
+
+    res.status(200).json(tenant);
+  } catch (error) {
+    res.status(500).json({ message: "Error updating tenant" });
   }
 }
 
-module.exports = TenantsController;
+// Menghapus tenant berdasarkan id
+static async delete(req, res) {
+  try {
+    const { id } = req.params;
+    const tenant = await Tenant.findByPk(id);
+
+    if (!tenant) {
+      return res.status(404).json({ message: "Tenant not found" });
+    }
+
+    await tenant.destroy();
+    res.status(200).json({ message: "Tenant deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting tenant" });
+  }
+}
+}
+
+module.exports = TenantController;

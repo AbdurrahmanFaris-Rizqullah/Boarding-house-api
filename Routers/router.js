@@ -7,6 +7,7 @@ const authentication = require("../middlewares/authenticate");
 const router = express.Router();
 
 // Home route
+router.get('/', TenantsController.getAllTenants);
 router.get("/", (req, res) => {
   res.send("Boarding House API Home");
 });

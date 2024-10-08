@@ -1,37 +1,28 @@
-const { Payment } = require("../models");
+const { Payment } = require('../models');
 
-class PaymentsController {
-  static async addPayment(req, res) {
+class PaymentController {
+  static async getAll(req, res) {
     try {
-      const { amount, tenantId, roomId } = req.body;
-      const newPayment = await Payment.create({ amount, tenantId, roomId });
-      res.status(201).json(newPayment);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to add payment", error });
-    }
-  }
-
-  static async getAllPayments(req, res) {
-    try {
-      const payments = await Payment.findAll();
+      const payments = await Payment.findAll({
+        include: ['Tenant', 'Room'],  // Pastikan sudah set association di model
+      });
       res.status(200).json(payments);
     } catch (error) {
-      res.status(500).json({ message: "Failed to get payments", error });
+      res.status(500).json({ message: "Error fetching payments" });
     }
   }
 
-  static async getPaymentById(req, res) {
+  static async create(req, res) {
     try {
-      const payment = await Payment.findByPk(req.params.id);
-      if (payment) {
-        res.status(200).json(payment);
-      } else {
-        res.status(404).json({ message: "Payment not found" });
-      }
+      const { amount, status, due_date, tenantId, roomId } = req.body;
+      const payment = await Payment.create({ amount, status, due_date, tenantId, roomId });
+      res.status(201).json(payment);
     } catch (error) {
-      res.status(500).json({ message: "Failed to get payment", error });
+      res.status(500).json({ message: "Error creating payment" });
     }
   }
+
+  // Update & Delete payment juga bisa dibuat
 }
 
-module.exports = PaymentsController;
+module.exports = PaymentController;
