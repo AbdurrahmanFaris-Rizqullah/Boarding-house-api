@@ -25,7 +25,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'Tenants',  // Harus sesuai dengan nama tabel 'Tenants'
+          model: 'Tenants',  // Sesuai dengan nama tabel Tenants
           key: 'id'
         },
         onUpdate: 'CASCADE',
@@ -35,7 +35,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'Rooms',  // Harus sesuai dengan nama tabel 'Rooms'
+          model: 'Rooms',    // Sesuai dengan nama tabel Rooms
           key: 'id'
         },
         onUpdate: 'CASCADE',

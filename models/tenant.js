@@ -1,47 +1,29 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
-module.exports = (sequelize, DataTypes) => {
-  class Tenant extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     */
-    static associate(models) {
-      Tenant.hasMany(models.Payment, {
-        foreignKey: 'tenantId', // Foreign key di Payment
-        onDelete: 'CASCADE',    // Hapus semua pembayaran jika tenant dihapus
-        onUpdate: 'CASCADE'     // Update foreign key jika tenant di-update
-      });
+const express = require("express");
+const TenantsController = require("../controllers/TenantsController");
+const RoomsController = require("../Controllers/RoomsController");
+const PaymentsController = require("../controllers/PaymentsController");
+const adminAuth = require("../middlewares/adminAuthorization");
+const authentication = require("../middlewares/authenticate");
+const router = express.Router();
 
-      Tenant.belongsTo(models.Room, {
-        foreignKey: 'roomId',  // Foreign key di Tenant
-        onDelete: 'SET NULL',  // Set null jika room dihapus, tenant tetap ada
-        onUpdate: 'CASCADE'    // Update foreign key jika room di-update
-      });
-    }
-  }
-  Tenant.init({
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-      validate: {
-        isEmail: true
-      }
-    },
-    phone: {
-      type: DataTypes.STRING,
-      allowNull: false
-    }
-  }, {
-    sequelize,
-    modelName: 'Tenant',
-  });
-  return Tenant;
-};
+// Home route
+router.get("/", (req, res) => {
+  res.send("Boarding House API Home");
+});
+
+// Tenants routes
+router.post("/add-tenant", authentication, adminAuth, TenantsController.addTenant);
+router.get("/tenants", TenantsController.getAllTenants);
+router.get("/tenants/:id", TenantsController.getTenantById);
+
+// Rooms routes
+router.get("/rooms", RoomsController.getAllRooms);
+router.get("/rooms/:id", RoomsController.getRoomById);
+router.post("/add-room", authentication, adminAuth, RoomsController.addRoom);
+
+// Payments routes
+router.post("/payments", authentication, PaymentsController.addPayment);
+router.get("/payments", PaymentsController.getAllPayments);
+router.get("/payments/:id", PaymentsController.getPaymentById);
+
+module.exports = router;
