@@ -4,11 +4,6 @@ const {
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Room extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
       Room.hasMany(models.Tenant, {
         foreignKey: 'roomId', // Foreign key di Tenant
@@ -23,10 +18,22 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
   }
+
   Room.init({
-    name: DataTypes.STRING,
-    status: DataTypes.STRING,
-    price: DataTypes.FLOAT
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    status: {
+      type: DataTypes.ENUM("tersedia", "terisi", "sedang direnovasi"),
+      allowNull: false,
+      defaultValue: "tersedia"
+    },
+    price: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+      defaultValue: "0"
+    }
   }, {
     sequelize,
     modelName: 'Room',
