@@ -4,11 +4,30 @@ function errorHandler(err, req, res, next) {
     switch (err.name) {
       case "invalid input":
         status = 400;
-        message = "Username/ email/ passwword cannot be empty";
+        message = "Username/ email/ phone number cannot be empty";
         break;
+      case "invalid email":
+        status = 400;
+        message = "Invalid format email";
+        break;
+      case "email exists":
+        status = 400;
+        message = "Email address already in use!";
+        break;
+      case "phone exists":
+        status = 400;
+        message = "phone number already in use!";
+        break;
+      case "invalid format number":
+        status = 400;
+        message = "Invalid phone format number or number is too long";
       case "invalid user":
         status = 401;
         message = "Error login user not found / password not matched";
+        break;
+      case "NotFoundTenant":
+        status = 404;
+        message = "Error not found";
         break;
       case "NotFound":
         status = 404;

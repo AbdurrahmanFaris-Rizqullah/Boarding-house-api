@@ -1,10 +1,11 @@
 const express = require("express");
 const TenantsController = require("../controllers/TenantsController");
 const RoomsController = require("../Controllers/roomsController");
-const PaymentsController = require("../controllers/PaymentsController");
+const PaymentsController = require("../Controllers/PaymentController");
 const adminAuth = require("../middlewares/adminAuthorization");
-const authentication = require("../middlewares/authenticate");
+const authentication = require("../middlewares/authentication");
 const router = express.Router();
+const errorHandler = require("../middlewares/errorHandler");
 
 // Home route
 router.get('/', TenantsController.getAllTenants);
@@ -19,10 +20,6 @@ router.get("/tenants/:id", TenantsController.getTenantById);
 
 // Rooms routes
 router.get("/rooms", RoomsController.getAllRooms);
-router.get("/rooms/:id", RoomsController.getRoomById);
-router.post("/add-room", authentication, adminAuth, RoomsController.addRoom);
-
-// Payments routes
 router.post("/payments", authentication, PaymentsController.addPayment);
 router.get("/payments", PaymentsController.getAllPayments);
 router.get("/payments/:id", PaymentsController.getPaymentById);

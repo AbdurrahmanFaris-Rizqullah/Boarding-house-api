@@ -9,9 +9,42 @@ module.exports = (sequelize, DataTypes) => {
   }
   Tenant.init(
     {
-      name: DataTypes.STRING,
-      email: DataTypes.STRING,
-      phone: DataTypes.INTEGER,
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: { 
+          args: true,
+          msg: 'Email address already in use!', 
+        },
+        validate: { 
+          isEmail:  {args:true, msg: 'Must be a valid email address',},
+          notNull: {  msg: 'Email address is required', },
+        },
+        
+      },
+      
+      phone: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: {
+          msg: 'Phone number already in use!',
+        },
+        validate: {
+          isInt: {
+            msg: 'Phone number must contain only numbers',
+          },
+          len: {
+            args: [1, 14],
+            msg: 'Phone number must be 14 digits long',
+          }
+        }
+      },
+
       roomId: {
         type: DataTypes.INTEGER,
         references: {
